@@ -23,11 +23,11 @@ func TestBuildWebserviceResponseFromRequestToReturnValidObject(t *testing.T) {
 		t.Fatalf("Expected WebserviceResponse.Domain to be foo")
 	}
 
-	if result.Addresses[0].Address != "1.2.3.4" {
+	if result.Records[0].Value != "1.2.3.4" {
 		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4")
 	}
 
-	if result.Addresses[0].AddrType != "A" {
+	if result.Records[0].Type != "A" {
 		t.Fatalf("Expected WebserviceResponse.AddrType to be A")
 	}
 }
@@ -47,11 +47,11 @@ func TestBuildWebserviceResponseFromRequestWithXRealIPHeaderToReturnValidObject(
 		t.Fatalf("Expected WebserviceResponse.Domain to be foo")
 	}
 
-	if result.Addresses[0].Address != "1.2.3.4" {
+	if result.Records[0].Value != "1.2.3.4" {
 		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4")
 	}
 
-	if result.Addresses[0].AddrType != "A" {
+	if result.Records[0].Type != "A" {
 		t.Fatalf("Expected WebserviceResponse.AddrType to be A")
 	}
 }
@@ -71,12 +71,12 @@ func TestBuildWebserviceResponseFromRequestWithXForwardedForHeaderToReturnValidO
 		t.Fatalf("Expected WebserviceResponse.Domain to be foo but was %s", result.Domain)
 	}
 
-	if result.Addresses[0].Address != "1.2.3.4" {
-		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4 but was %s", result.Addresses[0].Address)
+	if result.Records[0].Value != "1.2.3.4" {
+		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4 but was %s", result.Records[0].Value)
 	}
 
-	if result.Addresses[0].AddrType != "A" {
-		t.Fatalf("Expected WebserviceResponse.AddrType to be A but was %s", result.Addresses[0].AddrType)
+	if result.Records[0].Type != "A" {
+		t.Fatalf("Expected WebserviceResponse.AddrType to be A but was %s", result.Records[0].Type)
 	}
 }
 
@@ -185,12 +185,12 @@ func TestBuildWebserviceResponseFromRequestToReturnValidObjectWithDynExtractor(t
 		t.Fatalf("Expected WebserviceResponse.Domain to be foo but was %s", result.Domain)
 	}
 
-	if result.Addresses[0].Address != "1.2.3.4" {
-		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4 but was %s", result.Addresses[0].Address)
+	if result.Records[0].Value != "1.2.3.4" {
+		t.Fatalf("Expected WebserviceResponse.Address to be 1.2.3.4 but was %s", result.Records[0].Value)
 	}
 
-	if result.Addresses[0].AddrType != "A" {
-		t.Fatalf("Expected WebserviceResponse.AddrType to be A but was %s", result.Addresses[0].AddrType)
+	if result.Records[0].Type != "A" {
+		t.Fatalf("Expected WebserviceResponse.AddrType to be A but was %s", result.Records[0].Type)
 	}
 }
 
@@ -202,5 +202,16 @@ func TestBuildWebserviceResponseFromRequestToReturnInvalidObjectWhenNoSecretIsGi
 
 	if result.Success != false {
 		t.Fatalf("Expected WebserviceResponse.Success to be false")
+	}
+}
+
+func TestBuildWebserviceResponseFromRequestToDeleteSuccess(t *testing.T) {
+	var appConfig = &Config{}
+
+	req, _ := http.NewRequest(http.MethodGet, "/delete?secret=changeme&domain=foo", nil)
+	result := BuildWebserviceResponseFromRequest(req, appConfig, defaultExtractor)
+
+	if !result.Success {
+		t.Fatalf("Expected /delete request to succeed")
 	}
 }
